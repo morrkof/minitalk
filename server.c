@@ -24,11 +24,14 @@ void my_func(int signal, siginfo_t *siginfo, void *context)
         counter++;
         // write(1, "SIGUSR2 was received\n", 22);
     }
-    else
-        write(1, "UNDEFINED SIGNAL was received\n", 31);
+    // else
+    //     write(1, "UNDEFINED SIGNAL was received\n", 31);
+    kill(siginfo->si_pid, SIGUSR1);
     if (counter >= 8)
     {
-        write(1, &out_char, 4);
+        write(1, &out_char, 1);
+        if (out_char == '\n')
+            kill(siginfo->si_pid, SIGUSR2);
         counter = 0;
         out_char = 0;
     }
