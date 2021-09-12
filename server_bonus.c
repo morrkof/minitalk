@@ -1,24 +1,16 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/13 02:18:01 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 02:51:27 by ppipes           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-#include "minitalk.h"
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <signal.h>
+#include <stdlib.h>
 
 // unsigned char counter = 0;
 // int out_char = 0;
 
 void my_func(int signal, siginfo_t *siginfo, void *context)
 {
-    (void)context;
     static unsigned char out_char;
     static unsigned char counter;
     if(signal == SIGUSR1)
@@ -48,16 +40,13 @@ void my_func(int signal, siginfo_t *siginfo, void *context)
 int main()
 {
     pid_t pid = getpid();
-    // printf("PID = %d\n", pid);
-    write(1, "PID = ", 6);
-    write(1, ft_itoa(pid), ft_strlen(ft_itoa(pid)));
-    write(1, "\n", 1);
+    printf("PID = %d\n", pid);
 
     struct sigaction sa;
     sigset_t   set;
 
     sigemptyset(&set);
-    ft_memset(&sa, 0, sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
 
     sigaddset(&set, SIGUSR1); 
     sigaddset(&set, SIGUSR2);

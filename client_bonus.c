@@ -1,16 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/13 02:18:16 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 02:56:28 by ppipes           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "minitalk.h"
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
 
 int g_jopa = 1;
 
@@ -49,8 +41,6 @@ void send_str(char *str, int pid)
 
 void my_func(int signal, siginfo_t *siginfo, void *context)
 {
-    (void)context;
-    (void)siginfo;
     if (signal == SIGUSR1)
         write(1, ".", 1);
     else if (signal == SIGUSR2)
@@ -69,7 +59,7 @@ int main(int argc, char **argv)
     sigset_t   set;
 
     sigemptyset(&set);
-    ft_memset(&sa, 0, sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
 
     sigaddset(&set, SIGUSR1); 
     sigaddset(&set, SIGUSR2);
@@ -81,6 +71,6 @@ int main(int argc, char **argv)
     sigaction(SIGUSR1, &sa, NULL);
     sigaction(SIGUSR2, &sa, NULL);
 
-    send_str(argv[2], ft_atoi(argv[1]));
-    send_str("\n", ft_atoi(argv[1]));
+    send_str(argv[2], atoi(argv[1]));
+    send_str("\n", atoi(argv[1]));
 }
