@@ -6,15 +6,15 @@
 /*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/13 17:56:13 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 02:53:30 by ppipes           ###   ########.fr       */
+/*   Updated: 2021/09/13 12:38:49 by ppipes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "../minitalk.h"
 
-static int		ft_amount(int n)
+static int	ft_amount(int n)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (n != 0)
@@ -25,7 +25,7 @@ static int		ft_amount(int n)
 	return (i);
 }
 
-static void		ft_reverse(char *s, int j)
+static void	ft_reverse(char *s, int j)
 {
 	int		i;
 	char	c;
@@ -43,7 +43,7 @@ static void		ft_reverse(char *s, int j)
 	}
 }
 
-static void		ft_negative(int *n, int *min, int *minus)
+static void	ft_negative(int *n, int *min, int *minus)
 {
 	if (*n == -2147483648)
 	{
@@ -54,7 +54,7 @@ static void		ft_negative(int *n, int *min, int *minus)
 	*n = *n * -1;
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char	*s;
 	int		i;
@@ -66,7 +66,8 @@ char			*ft_itoa(int n)
 	minus = 0;
 	if (n < 0)
 		ft_negative(&n, &min, &minus);
-	if (!(s = (char *)malloc(sizeof(char) * ft_amount(n) + 1 + minus)))
+	s = (char *)malloc(sizeof(char) * ft_amount(n) + 1 + minus);
+	if (!s)
 		return (NULL);
 	while (n > 0)
 	{
