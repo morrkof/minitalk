@@ -6,7 +6,7 @@
 /*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 02:17:51 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 12:28:44 by ppipes           ###   ########.fr       */
+/*   Updated: 2021/09/13 19:35:42 by ppipes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@ size_t	ft_strlen(const char *s)
 
 void	ft_error(int error)
 {
-	static char	*message[8] = {"     :wrong arguments (0)",
-	"     :can't open the file (1)", "     :failed to create window (2)",
-	"     :invalid map (3)", "     :invalid resolution (4)",
-	"     :invalid color (5)", "     :invalid texture (6)",
-	"     :memory allocation error (7)"};
+	static char	*message[6] = {"     :wrong arguments (0)",
+	"     :sigaction failed (1)", "     :memory allocation failed (2)",
+	"     :sigemptyset failed (3)", "     :sigaddset failed (4)",
+	"     :kill failed (5)"};
 
 	write(2, "Error\n", 6);
 	write(2, message[error], ft_strlen(message[error]));

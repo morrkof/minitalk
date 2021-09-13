@@ -6,7 +6,7 @@
 /*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 12:32:02 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 19:00:27 by ppipes           ###   ########.fr       */
+/*   Updated: 2021/09/13 19:45:07 by ppipes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,13 @@ void	send_str(char *str, int pid)
 			{
 				g_jopa = 0;
 				if (1 << counter & *str)
-					kill(pid, SIGUSR1);
+				{
+					if (kill(pid, SIGUSR1) < 0)
+						ft_error(5);
+				}
 				else
-					kill(pid, SIGUSR2);
+					if (kill(pid, SIGUSR2) < 0)
+						ft_error(5);
 				counter++;
 			}
 		}
@@ -43,8 +47,6 @@ void	my_func(int signal, siginfo_t *siginfo, void *context)
 	(void)siginfo;
 	if (signal == SIGUSR1)
 		write(1, ".", 1);
-	else if (signal == SIGUSR2)
-		write(1, "\nMessage received.\n", 19);
 	g_jopa = 1;
 }
 
@@ -55,15 +57,18 @@ int	main(int argc, char **argv)
 
 	if (argc != 3)
 		ft_error(0);
-	sigemptyset(&set);
+	if (sigemptyset(&set) < 0)
+		ft_error(3);
 	ft_memset(&sa, 0, sizeof(sa));
-	sigaddset(&set, SIGUSR1);
-	sigaddset(&set, SIGUSR2);
+	if (sigaddset(&set, SIGUSR1) < 0 || sigaddset(&set, SIGUSR2) < 0)
+		ft_error(4);
 	sa.sa_mask = set;
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = my_func;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	if (sigaction(SIGUSR1, &sa, NULL) < 0 || sigaction(SIGUSR2, &sa, NULL) < 0)
+		ft_error(1);
 	send_str(argv[2], ft_atoi(argv[1]));
 	send_str("\n", ft_atoi(argv[1]));
+	usleep(50);
+	write(1, "\nMessage received.\n", 19);
 }

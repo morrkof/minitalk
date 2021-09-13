@@ -6,7 +6,7 @@
 /*   By: ppipes <morrkof@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/13 02:18:16 by ppipes            #+#    #+#             */
-/*   Updated: 2021/09/13 18:45:35 by ppipes           ###   ########.fr       */
+/*   Updated: 2021/09/13 19:41:45 by ppipes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,13 @@ void	send_str(char *str, int pid)
 			{
 				g_jopa = 0;
 				if (1 << counter & *str)
-					kill(pid, SIGUSR1);
+				{
+					if (kill(pid, SIGUSR1) < 0)
+						ft_error(5);
+				}
 				else
-					kill(pid, SIGUSR2);
+					if (kill(pid, SIGUSR2) < 0)
+						ft_error(5);
 				counter++;
 			}
 		}
@@ -52,15 +56,16 @@ int	main(int argc, char **argv)
 
 	if (argc != 3)
 		ft_error(0);
-	sigemptyset(&set);
+	if (sigemptyset(&set) < 0)
+		ft_error(3);
 	ft_memset(&sa, 0, sizeof(sa));
-	sigaddset(&set, SIGUSR1);
-	sigaddset(&set, SIGUSR2);
+	if (sigaddset(&set, SIGUSR1) < 0 || sigaddset(&set, SIGUSR2) < 0)
+		ft_error(4);
 	sa.sa_mask = set;
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = my_func;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	if (sigaction(SIGUSR1, &sa, NULL) < 0 || sigaction(SIGUSR2, &sa, NULL) < 0)
+		ft_error(1);
 	send_str(argv[2], ft_atoi(argv[1]));
 	send_str("\n", ft_atoi(argv[1]));
 }
